@@ -14,10 +14,15 @@ public class PlayerMovement : MonoBehaviour
 
     public bool isDead;
     public bool isMoving;
+    public bool isAttacking;
 
     public int playerHealth;
 
     public GameObject attackHitbox;
+    public Transform attackSpawnStartPos;
+    public Vector3 attackSpawn;
+    private float time;
+    public float attackDelay;
 
 
     // Start is called before the first frame update
@@ -33,10 +38,22 @@ public class PlayerMovement : MonoBehaviour
     {
         if(isDead == false)
         {
-            x = Input.GetAxis("Horizontal");
-            y = Input.GetAxis("Vertical");
+            if(isAttacking == false)
+            {
+                x = Input.GetAxis("Horizontal");
+                y = Input.GetAxis("Vertical");
 
-            rb.velocity = new Vector2(x, y) * speed;
+                rb.velocity = new Vector2(x, y) * speed;
+
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    if(time <= 0)
+                    {
+                        Instantiate(attackHitbox, attackSpawnStartPos.position, Quaternion.identity);
+                        time = attackDelay;
+                    } 
+                }
+            }
         }
         
     }
