@@ -8,21 +8,23 @@ public class PlayerMovement : MonoBehaviour
     private Animator anim;
     private SpriteRenderer rend;
 
+    private Vector3 change;
+
     public float speed;
     public float x;
     public float y;
 
     public bool isDead;
-    public bool isMoving;
+    //public bool isMoving;
     public bool isAttacking;
 
     public int playerHealth;
 
-    public GameObject attackHitbox;
-    public Transform attackSpawnStartPos;
-    public Vector3 attackSpawn;
-    private float time;
-    public float attackDelay;
+    //public GameObject attackHitbox;
+    //public Transform attackSpawnStartPos;
+    //public Vector3 attackSpawn;
+    //private float time;
+    //public float attackDelay;
 
 
     // Start is called before the first frame update
@@ -36,26 +38,39 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isDead == false)
+        change = Vector3.zero;
+        change.x = Input.GetAxisRaw("Horizontal");
+        change.y = Input.GetAxisRaw("Vertical");
+        if(change != Vector3.zero)
         {
-            if(isAttacking == false)
-            {
-                x = Input.GetAxis("Horizontal");
-                y = Input.GetAxis("Vertical");
-
-                rb.velocity = new Vector2(x, y) * speed;
-
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    if(time <= 0)
-                    {
-                        Instantiate(attackHitbox, attackSpawnStartPos.position, Quaternion.identity);
-                        time = attackDelay;
-                    } 
-                }
-            }
+            MoveCharacter();
         }
+
+        //if(isDead == false)
+        //{
+        //    if(isAttacking == false)
+        //    {
+        //        x = Input.GetAxis("Horizontal");
+        //        y = Input.GetAxis("Vertical");
+        //
+        //        rb.velocity = new Vector2(x, y) * speed;
+        //
+        //        if (Input.GetKeyDown(KeyCode.Space))
+        //        {
+        //            if(time <= 0)
+        //            {
+        //                Instantiate(attackHitbox, attackSpawnStartPos.position, Quaternion.identity);
+        //                time = attackDelay;
+        //            } 
+        //        }
+        //    }
+        //}
         
+    }
+
+    void MoveCharacter()
+    {
+        rb.MovePosition(transform.position + change.normalized * speed * Time.fixedDeltaTime);
     }
 
     private void DeadPlayer()
